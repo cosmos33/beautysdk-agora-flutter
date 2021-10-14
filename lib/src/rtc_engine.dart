@@ -3452,11 +3452,11 @@ mixin MMBeautyInterface {
   static String MAKEUP_TYPE_MAKEUP_LUT = 'makeuplut';
 
   // 设置一键美颜
-  static String MAKEUP_AUTO_TYPE_NORMAL    = 'Normal';
-  static String MAKEUP_AUTO_TYPE_NATURAL   = 'Natural';
-  static String MAKEUP_AUTO_TYPE_LOVELY    = 'Lovely';
-  static String MAKEUP_AUTO_TYPE_GODDESS   = 'Goddess';
-  static String MAKEUP_AUTO_TYPE_WHITENING = 'Whitening';
+  static String MAKEUP_AUTO_TYPE_NORMAL = 'null';
+  static String MAKEUP_AUTO_TYPE_NATURAL = 'natural';
+  static String MAKEUP_AUTO_TYPE_LOVELY = 'cute';
+  static String MAKEUP_AUTO_TYPE_GODDESS = 'goddess';
+  static String MAKEUP_AUTO_TYPE_WHITENING = 'purewhite';
 
   ///基础美颜
   Future<void> setBeautyValue(String beautyType, double value);
@@ -3466,6 +3466,7 @@ mixin MMBeautyInterface {
 
   ///设置美白版本
   Future<void> setWhittenVersion(int version);
+
   ///设置红润版本
   Future<void> setReddenVersion(int version);
   ///滤镜
