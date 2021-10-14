@@ -1263,6 +1263,57 @@ class RtcEngine with RtcEngineInterface {
       'backgroundSource': backgroundSource.toJson(),
     });
   }
+
+  @override
+  Future<void> addMakeup(String path) {
+    return _invokeMethod('addMakeup', {'path': path});
+  }
+
+  @override
+  Future<void> addMaskModel(String maskPath) {
+    return _invokeMethod('addMaskModel', {'path': maskPath});
+  }
+
+  @override
+  Future<void> changeLipTextureType(int type) {
+    return _invokeMethod('changeLipTextureType', {'type': type});
+  }
+
+  @override
+  Future<void> clearMakeup() {
+    return _invokeMethod('clearMakeup');
+  }
+
+  @override
+  Future<void> clearMask() {
+    return _invokeMethod('clearMask');
+  }
+
+  @override
+  Future<void> removeMakeup(String type) {
+    return _invokeMethod('removeMakeup', {'type': type});
+  }
+
+  @override
+  Future<void> setAutoBeauty(String autoType) {
+    return _invokeMethod('setAutoBeauty', {'autoType': autoType});
+  }
+
+  @override
+  Future<void> setLookupIntensity(double value) {
+    return _invokeMethod('setIntensity', {'value': value});
+  }
+
+  @override
+  Future<void> setLookupEffect(String path) {
+    return _invokeMethod('setLookupEffect', {'path': path});
+  }
+
+  @override
+  Future<void> setBeautyValue(String beautyBype, double value) {
+    return _invokeMethod(
+        'setValue', {'beautyBype': beautyBype, 'value': value});
+  }
 }
 
 /// @nodoc
@@ -1288,7 +1339,8 @@ mixin RtcEngineInterface
         RtcAudioRecorderInterface,
         RtcInjectStreamInterface,
         RtcCameraInterface,
-        RtcStreamMessageInterface {
+        RtcStreamMessageInterface,
+        MMBeautyInterface {
   /// Destroys the [RtcEngine] instance and releases all resources used by the Agora SDK.
   ///
   /// This method is useful for apps that occasionally make voice or video calls, to free up resources for other operations when not making calls.
@@ -3283,4 +3335,37 @@ mixin RtcStreamMessageInterface {
   ///
   /// **Parameter** [message] Sent data.
   Future<void> sendStreamMessage(int streamId, String message);
+}
+
+/// @nodoc 美颜sdk接口
+mixin MMBeautyInterface {
+  ///基础美颜
+  Future<void> setBeautyValue(String beautyBype, double value);
+
+  ///一键美颜
+  Future<void> setAutoBeauty(String autoType);
+
+  ///滤镜
+  Future<void> setLookupEffect(String path);
+
+  //滤镜浓度
+  Future<void> setLookupIntensity(double value);
+
+  ///添加贴纸
+  Future<void> addMaskModel(String maskPath);
+
+  ///清除贴纸
+  Future<void> clearMask();
+
+  ///添加美妆
+  Future<void> addMakeup(String path);
+
+  ///移除贴纸
+  Future<void> removeMakeup(String type);
+
+  ///修改口红质地
+  Future<void> changeLipTextureType(int type);
+
+  //清除贴纸
+  Future<void> clearMakeup();
 }
