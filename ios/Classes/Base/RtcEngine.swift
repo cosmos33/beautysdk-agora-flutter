@@ -390,11 +390,12 @@ protocol RtcEngineStreamMessageInterface {
 
 @objc
 class RtcEngineManager: NSObject, RtcEngineInterface {
+
     private var emitter: (_ methodName: String, _ data: [String: Any?]?) -> Void
     private(set) var engine: AgoraRtcEngineKit?
     private var delegate: RtcEngineEventHandler?
     private var mediaObserver: MediaObserver?
-
+    private var argoraMediaIO = MMArgoraSourceMediaIO()
     init(_ emitter: @escaping (_ methodName: String, _ data: [String: Any?]?) -> Void) {
         self.emitter = emitter
     }
@@ -406,11 +407,17 @@ class RtcEngineManager: NSObject, RtcEngineInterface {
         mediaObserver = nil
     }
 
+    
     @objc func create(_ params: NSDictionary, _ callback: Callback) {
         delegate = RtcEngineEventHandler { [weak self] in
             self?.emitter($0, $1)
         }
         engine = AgoraRtcEngineKit.sharedEngine(with: mapToRtcEngineConfig(params["config"] as! [String: Any]), delegate: delegate)
+        let configuration = AgoraVideoEncoderConfiguration.init(size: AgoraVideoDimension640x480, frameRate:.fps15, bitrate: AgoraVideoBitrateStandard, orientationMode: .fixedPortrait)
+//
+        engine?.setVideoEncoderConfiguration(configuration)
+        
+        engine?.setVideoSource(argoraMediaIO)
         callback.code(engine?.setAppType(AgoraRtcAppType(rawValue: (params["appType"] as! NSNumber).uintValue)!))
     }
 
@@ -438,6 +445,7 @@ class RtcEngineManager: NSObject, RtcEngineInterface {
         let channelName = params["channelName"] as! String
         let optionalInfo = params["optionalInfo"] as? String
         let optionalUid = params["optionalUid"] as! NSNumber
+        engine?.enableLocalVideo(true);
         if let options = params["options"] as? [String: Any] {
             callback.code(engine?.joinChannel(byToken: token, channelId: channelName, info: optionalInfo, uid: optionalUid.uintValue, options: mapToChannelMediaOptions(options)))
             return
@@ -1012,7 +1020,9 @@ class RtcEngineManager: NSObject, RtcEngineInterface {
     }
 
     @objc func switchCamera(_ callback: Callback) {
+        self.argoraMediaIO.rotateCamera()
         callback.code(engine?.switchCamera())
+        
     }
 
     @objc func isCameraZoomSupported(_ callback: Callback) {

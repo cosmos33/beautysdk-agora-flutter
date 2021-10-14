@@ -36,6 +36,7 @@ public class AgoraRtcChannelPlugin: NSObject, FlutterPlugin, FlutterStreamHandle
     public func detachFromEngine(for registrar: FlutterPluginRegistrar) {
         methodChannel?.setMethodCallHandler(nil)
         eventChannel?.setStreamHandler(nil)
+        
         manager.Release()
     }
 

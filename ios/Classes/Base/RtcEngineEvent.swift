@@ -364,10 +364,12 @@ extension RtcEngineEventHandler: AgoraRtcEngineDelegate {
 
     public func rtcEngineRemoteAudioMixingDidStart(_: AgoraRtcEngineKit) {
         // TODO: Not in Android
+        print("哈哈哈");
     }
 
     public func rtcEngineRemoteAudioMixingDidFinish(_: AgoraRtcEngineKit) {
         // TODO: Not in Android
+        print("哈哈哈");
     }
 
     public func rtcEngineDidAudioEffectFinish(_: AgoraRtcEngineKit, soundId: Int) {

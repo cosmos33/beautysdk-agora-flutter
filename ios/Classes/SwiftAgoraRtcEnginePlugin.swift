@@ -51,6 +51,9 @@ public class SwiftAgoraRtcEnginePlugin: NSObject, FlutterPlugin, FlutterStreamHa
     private func emit(_ methodName: String, _ data: Dictionary<String, Any?>?) {
         var event: Dictionary<String, Any?> = ["methodName": methodName]
         if let `data` = data {
+//            for tempDic in data {
+//                print("哈哈哈哈 key: \(tempDic.key), value: \(String(describing: tempDic.value))")
+//            }
             event.merge(data) { (current, _) in
                 current
             }

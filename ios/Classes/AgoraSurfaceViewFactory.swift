@@ -16,6 +16,7 @@ class AgoraSurfaceViewFactory: NSObject, FlutterPlatformViewFactory {
         self.messager = messager
         self.rtcEnginePlugin = rtcEnginePlugin
         self.rtcChannelPlugin = rtcChannelPlugin
+        
     }
 
     func createArgsCodec() -> FlutterMessageCodec & NSObjectProtocol {
@@ -102,4 +103,6 @@ class AgoraSurfaceView: NSObject, FlutterPlatformView {
         }
         return rtcChannelPlugin?.channel(channelId)
     }
+    
+    
 }
