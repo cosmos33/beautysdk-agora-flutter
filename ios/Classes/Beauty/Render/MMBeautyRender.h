@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface MMBeautyRender : NSObject
 
+- (instancetype)initWithAppId:(NSString *)appId;
+
 - (void)addBeauty;
 - (void)removeBeauty;
 

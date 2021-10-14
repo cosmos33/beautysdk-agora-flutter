@@ -14,7 +14,7 @@
 static void * kMDRecordCameraAdapterKey = &kMDRecordCameraAdapterKey;
 
 @interface MMArgoraSourceMediaIO ()<MDRecordCameraDelegate,MMAgoraCameraDelegate,MMDeviceMotionHandling>
-
+@property (nonatomic, copy) NSString *appId;
 @property (nonatomic, strong) MDRecordCamera *camera;
 @property (nonatomic, strong) MMAgoraCamera *agroCamera;
 @property (nonatomic, strong) dispatch_queue_t sessionQueue;
@@ -28,17 +28,17 @@ static void * kMDRecordCameraAdapterKey = &kMDRecordCameraAdapterKey;
 
 @implementation MMArgoraSourceMediaIO
 
-- (instancetype)init
-{
+- (instancetype)initWithBeautyAppID:(NSString *)appid{
     self = [super init];
     if (self) {
+        self.appId = appid;
         [MMDeviceMotionObserver startMotionObserve];
         [MMDeviceMotionObserver addDeviceMotionHandler:self];
         self.position = AVCaptureDevicePositionFront;
         self.sessionQueue = dispatch_queue_create("com.immomo.recordsdk.camera.adapter", dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL, QOS_CLASS_DEFAULT, 0));
         dispatch_queue_set_specific(self.sessionQueue, kMDRecordCameraAdapterKey, (__bridge void *)self, NULL);
         
-        self.render = [[MMBeautyRender alloc] init];
+        self.render = [[MMBeautyRender alloc] initWithAppId:self.appId];
         
         self.viewOrientationObserver = [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationWillChangeStatusBarOrientationNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
             UIInterfaceOrientation orientation = (UIInterfaceOrientation)note.userInfo[UIApplicationStatusBarOrientationUserInfoKey];
@@ -135,11 +135,13 @@ static void * kMDRecordCameraAdapterKey = &kMDRecordCameraAdapterKey;
     CMTime timestamp = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
     if (mediaType == kCMMediaType_Video) {
         CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
+        CVPixelBufferRetain(pixelBuffer);
         NSError *error = nil;
         [self.render setBeautyFactor:1 forKey:SKIN_SMOOTH];
         [self.render setBeautyFactor:1 forKey:TEETHWHITEN];
         CVPixelBufferRef renderBuffer = [self.render renderPixelBuffer:pixelBuffer error:&error];
         [self.consumer consumePixelBuffer:renderBuffer withTimestamp:timestamp rotation:AgoraVideoRotationNone];
+        CVPixelBufferRelease(pixelBuffer);
         
     }
 }

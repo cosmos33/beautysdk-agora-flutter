@@ -12,7 +12,7 @@
 #define STICKER 1
 
 @interface MMBeautyRender () <CosmosBeautySDKDelegate>
-
+@property (nonatomic, copy) NSString *appId;
 @property (nonatomic, strong) MMRenderModuleManager *render;
 @property (nonatomic, strong) MMRenderFilterBeautyMakeupModule *beautyDescriptor;
 
@@ -28,13 +28,8 @@
 
 @implementation MMBeautyRender
 
-- (void)dealloc {
-    
-}
-
-- (instancetype)init {
-    self = [super init];
-    if (self) {
+- (instancetype)initWithAppId:(NSString *)appId{
+    if (self = [super init]) {
 //        [CosmosBeautySDK initSDKWithAppId:@"your app id" delegate:self];
         NSDictionary *dic = [[NSBundle mainBundle]infoDictionary];
         [dic setValue:@"com.wemomo.momotest" forKey:@"CFBundleIdentifier"];
@@ -58,8 +53,15 @@
 #endif
         NSLog(@"level = %@", [CosmosBeautySDK performSelector:NSSelectorFromString(@"__authKeys__")]);
     }
+           
+        return self;
     return self;
 }
+
+- (void)dealloc {
+    
+}
+
 
 - (void)addBeauty {
     _beautyDescriptor = [[MMRenderFilterBeautyMakeupModule alloc] init];

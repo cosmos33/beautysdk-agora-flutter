@@ -25,6 +25,7 @@ class _State extends State<JoinChannelVideo> {
   @override
   void initState() {
     super.initState();
+    log('波仔看看你执行了吗');
     _controller = TextEditingController(text: channelId);
     this._initEngine();
   }

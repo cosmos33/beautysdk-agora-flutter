@@ -15,9 +15,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 @interface MMArgoraSourceMediaIO : NSObject <AgoraVideoSourceProtocol>
-
-//@property (nonatomic, weak) id<MMArgoraSourceMediaIODelegate> delegate;
 - (void)rotateCamera;
+
+- (instancetype)initWithBeautyAppID:(NSString *)appid;
+
 @end
 
 NS_ASSUME_NONNULL_END

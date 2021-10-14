@@ -20,7 +20,8 @@ protocol RtcChannelInterface:
         RtcChannelMediaMetadataInterface,
         RtcChannelEncryptionInterface,
         RtcChannelInjectStreamInterface,
-        RtcChannelStreamMessageInterface {
+        RtcChannelStreamMessageInterface,
+        RtcChannelBeuatyInterface{
     func create(_ params: NSDictionary, _ callback: Callback)
 
     func destroy(_ params: NSDictionary, _ callback: Callback)
@@ -44,6 +45,11 @@ protocol RtcChannelInterface:
     func unpublish(_ params: NSDictionary, _ callback: Callback)
 
     func getCallId(_ params: NSDictionary, _ callback: Callback)
+}
+
+protocol RtcChannelBeuatyInterface {
+    func setBeautyValue(_ params: NSDictionary, _ callback: Callback)
+    
 }
 
 protocol RtcChannelAudioInterface {
@@ -401,3 +407,4 @@ class RtcChannelManager: NSObject, RtcChannelInterface {
 //        callback.code(self[params["channelId"] as! String]?.resumeAllChannelMediaRelay())
     }
 }
+

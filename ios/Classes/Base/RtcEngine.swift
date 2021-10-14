@@ -395,7 +395,7 @@ class RtcEngineManager: NSObject, RtcEngineInterface {
     private(set) var engine: AgoraRtcEngineKit?
     private var delegate: RtcEngineEventHandler?
     private var mediaObserver: MediaObserver?
-    private var argoraMediaIO = MMArgoraSourceMediaIO()
+    private var argoraMediaIO :MMArgoraSourceMediaIO?
     init(_ emitter: @escaping (_ methodName: String, _ data: [String: Any?]?) -> Void) {
         self.emitter = emitter
     }
@@ -414,7 +414,7 @@ class RtcEngineManager: NSObject, RtcEngineInterface {
         }
         engine = AgoraRtcEngineKit.sharedEngine(with: mapToRtcEngineConfig(params["config"] as! [String: Any]), delegate: delegate)
         let configuration = AgoraVideoEncoderConfiguration.init(size: AgoraVideoDimension640x480, frameRate:.fps15, bitrate: AgoraVideoBitrateStandard, orientationMode: .fixedPortrait)
-//
+        argoraMediaIO = MMArgoraSourceMediaIO.init(beautyAppID: "xxxx")
         engine?.setVideoEncoderConfiguration(configuration)
         
         engine?.setVideoSource(argoraMediaIO)
@@ -1020,9 +1020,8 @@ class RtcEngineManager: NSObject, RtcEngineInterface {
     }
 
     @objc func switchCamera(_ callback: Callback) {
-        self.argoraMediaIO.rotateCamera()
+        self.argoraMediaIO!.rotateCamera()
         callback.code(engine?.switchCamera())
-        
     }
 
     @objc func isCameraZoomSupported(_ callback: Callback) {
