@@ -1,11 +1,16 @@
 package io.agora.rtc.base
 
 import android.content.Context
+import android.graphics.Bitmap
+import com.cosmos.mm.AgoraRawDataBeautyManager
+import io.agora.advancedvideo.rawdata.MediaDataObserverPlugin
+import io.agora.advancedvideo.rawdata.MediaDataVideoObserver
+import io.agora.advancedvideo.rawdata.MediaPreProcessing
 import io.agora.rtc.*
+import io.agora.rtc.base.utils.YUVUtils
 import io.agora.rtc.internal.EncryptionConfig
 import io.agora.rtc.models.UserInfo
-import io.agora.advancedvideo.rawdata.MediaDataVideoObserver
-import io.agora.advancedvideo.rawdata.MediaDataObserverPlugin
+
 
 class IRtcEngine {
   interface RtcEngineInterface : RtcUserInfoInterface, RtcAudioInterface, RtcVideoInterface,
@@ -378,8 +383,10 @@ class RtcEngineManager(
 ) : IRtcEngine.RtcEngineInterface, MediaDataVideoObserver {
   var engine: RtcEngine? = null
     private set
-  var mediaDataObserverPlugin:MediaDataObserverPlugin? = null
+  var mediaDataObserverPlugin: MediaDataObserverPlugin? = null
   private var mediaObserver: MediaObserver? = null
+  private var agoraRawDataBeautyManager: AgoraRawDataBeautyManager? = null
+  private var frontCamera = true
 
   fun release() {
     RtcEngine.destroy()
@@ -390,23 +397,41 @@ class RtcEngineManager(
   override fun create(params: Map<String, *>, callback: Callback) {
     engine = RtcEngineEx.create(mapToRtcEngineConfig(params["config"] as Map<*, *>).apply {
       mContext = params["context"] as Context
-      mEventHandler = RtcEngineEventHandler { methodName, data ->
-        emit(methodName, data)
+      mEventHandler = RtcEngineEventHandler { methodName: String, data: Map<String, Any?>? ->
+        dipatch(methodName, data)
       }
     })
     callback.code((engine as RtcEngineEx).setAppType((params["appType"] as Number).toInt()))
     mediaDataObserverPlugin = MediaDataObserverPlugin.the()
-//    MediaPreProcessing.setCallback(mediaDataObserverPlugin)
-//    MediaPreProcessing.setVideoCaptureByteBuffer(mediaDataObserverPlugin.byteBufferCapture)
-//    mediaDataObserverPlugin.addVideoObserver(this)
+    MediaPreProcessing.setCallback(mediaDataObserverPlugin)
+    MediaPreProcessing.setVideoCaptureByteBuffer(mediaDataObserverPlugin!!.byteBufferCapture)
+    mediaDataObserverPlugin?.addVideoObserver(this)
+    agoraRawDataBeautyManager = AgoraRawDataBeautyManager(params["context"] as Context)
+  }
+
+  fun dipatch(methodName: String, data: Map<String, Any?>?) {
+    emit(methodName, data)
+    var params = data?.get("data") as List<*>
+    when (methodName) {
+      RtcEngineEvents.JoinChannelSuccess -> {
+        mediaDataObserverPlugin?.addDecodeBuffer(params[1] as Int)
+      }
+      RtcEngineEvents.UserJoined -> {
+        mediaDataObserverPlugin?.addDecodeBuffer(params[0] as Int)
+      }
+      RtcEngineEvents.UserOffline -> {
+        mediaDataObserverPlugin?.removeDecodeBuffer(params[0] as Int)
+      }
+      else -> {
+
+      }
+    }
   }
 
   override fun destroy(callback: Callback) {
     callback.resolve(engine) { release() }
-//    if (mediaDataObserverPlugin != null) {
-//      mediaDataObserverPlugin.removeVideoObserver(this)
-//      mediaDataObserverPlugin.removeAllBuffer()
-//    }
+    mediaDataObserverPlugin?.removeVideoObserver(this)
+    mediaDataObserverPlugin?.removeAllBuffer()
   }
 
   override fun setChannelProfile(params: Map<String, *>, callback: Callback) {
@@ -1237,6 +1262,7 @@ class RtcEngineManager(
   }
 
   override fun switchCamera(callback: Callback) {
+    frontCamera = !frontCamera
     callback.code(engine?.switchCamera())
   }
 
@@ -1322,5 +1348,21 @@ class RtcEngineManager(
         (params["message"] as String).toByteArray()
       )
     )
+  }
+
+  override fun onCaptureVideoFrame(data: ByteArray?, frameType: Int, width: Int, height: Int, bufferLength: Int, yStride: Int, uStride: Int, vStride: Int, rotation: Int, renderTimeMs: Long) {
+    val NV21 = ByteArray(bufferLength)
+    YUVUtils.swapYU12toYUV420SP(data, NV21, width, height, yStride, uStride, vStride)
+    val bitmap: Bitmap? = agoraRawDataBeautyManager!!.renderWithRawData(NV21, width, height, rotation, frontCamera)
+    if (bitmap != null) {
+      System.arraycopy(YUVUtils.bitmapToI420(width, height, bitmap), 0, data, 0, bufferLength)
+    }
+  }
+
+  override fun onRenderVideoFrame(uid: Int, data: ByteArray?, frameType: Int, width: Int, height: Int, bufferLength: Int, yStride: Int, uStride: Int, vStride: Int, rotation: Int, renderTimeMs: Long) {
+
+  }
+
+  override fun onPreEncodeVideoFrame(data: ByteArray?, frameType: Int, width: Int, height: Int, bufferLength: Int, yStride: Int, uStride: Int, vStride: Int, rotation: Int, renderTimeMs: Long) {
   }
 }
