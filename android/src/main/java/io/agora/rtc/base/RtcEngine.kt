@@ -19,7 +19,7 @@ class IRtcEngine {
     RtcAudioRouteInterface, RtcEarMonitoringInterface, RtcDualStreamInterface,
     RtcFallbackInterface, RtcTestInterface, RtcMediaMetadataInterface,
     RtcWatermarkInterface, RtcEncryptionInterface, RtcAudioRecorderInterface,
-    RtcInjectStreamInterface, RtcCameraInterface, RtcStreamMessageInterface {
+    RtcInjectStreamInterface, RtcCameraInterface, RtcStreamMessageInterface, MMBeautyInterface {
     fun create(params: Map<String, *>, callback: Callback)
 
     fun destroy(callback: Callback)
@@ -375,6 +375,19 @@ class IRtcEngine {
     fun createDataStream(params: Map<String, *>, callback: Callback)
 
     fun sendStreamMessage(params: Map<String, *>, callback: Callback)
+  }
+
+  interface MMBeautyInterface {
+    fun setBeautyValue(data: Map<String, Any?>?, callback: Callback)
+    fun setAutoBeauty(data: Map<String, Any?>?, callback: Callback)
+    fun setLookupEffect(data: Map<String, Any?>?, callback: Callback)
+    fun setLookupIntensity(data: Map<String, Any?>?, callback: Callback)
+    fun addMaskModel(data: Map<String, Any?>?, callback: Callback)
+    fun clearMask(callback: Callback)
+    fun addMakeup(data: Map<String, Any?>?, callback: Callback)
+    fun removeMakeup(data: Map<String, Any?>?, callback: Callback)
+    fun changeLipTextureType(data: Map<String, Any?>?, callback: Callback)
+    fun clearMakeup(callback: Callback)
   }
 }
 
@@ -1348,6 +1361,46 @@ class RtcEngineManager(
         (params["message"] as String).toByteArray()
       )
     )
+  }
+
+  override fun setBeautyValue(data: Map<String, Any?>?, callback: Callback) {
+    agoraRawDataBeautyManager?.setBeautyValue(data!!["beautyType"] as String, (data["value"] as Double).toFloat())
+  }
+
+  override fun setAutoBeauty(data: Map<String, Any?>?, callback: Callback) {
+    agoraRawDataBeautyManager?.setAutoBeauty(data!!["autoType"] as String)
+  }
+
+  override fun setLookupEffect(data: Map<String, Any?>?, callback: Callback) {
+    agoraRawDataBeautyManager?.setLookupEffect(data!!["path"] as String)
+  }
+
+  override fun setLookupIntensity(data: Map<String, Any?>?, callback: Callback) {
+    agoraRawDataBeautyManager?.setLookupIntensity((data!!["value"] as Double).toFloat())
+  }
+
+  override fun addMaskModel(data: Map<String, Any?>?, callback: Callback) {
+    agoraRawDataBeautyManager?.addMaskModel(data!!["path"] as String)
+  }
+
+  override fun clearMask(callback: Callback) {
+    agoraRawDataBeautyManager?.clearMask()
+  }
+
+  override fun addMakeup(data: Map<String, Any?>?, callback: Callback) {
+    agoraRawDataBeautyManager?.addMakeup(data!!["path"] as String)
+  }
+
+  override fun removeMakeup(data: Map<String, Any?>?, callback: Callback) {
+    agoraRawDataBeautyManager?.removeMakeup(data!!["type"] as String)
+  }
+
+  override fun changeLipTextureType(data: Map<String, Any?>?, callback: Callback) {
+    agoraRawDataBeautyManager?.changeLipTextureType(data!!["type"] as Int)
+  }
+
+  override fun clearMakeup(callback: Callback) {
+    agoraRawDataBeautyManager?.clearMakeup()
   }
 
   override fun onCaptureVideoFrame(data: ByteArray?, frameType: Int, width: Int, height: Int, bufferLength: Int, yStride: Int, uStride: Int, vStride: Int, rotation: Int, renderTimeMs: Long) {

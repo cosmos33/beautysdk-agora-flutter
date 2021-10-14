@@ -145,6 +145,18 @@ class _State extends State<JoinChannelVideo> {
               ),
             ],
           ),
+        ),
+        Align(
+          alignment: Alignment.bottomLeft,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ElevatedButton(
+                onPressed: this._setBeautyValue,
+                child: Text('瘦脸'),
+              ),
+            ],
+          ),
         )
       ],
     );
@@ -178,5 +190,9 @@ class _State extends State<JoinChannelVideo> {
         ],
       ),
     );
+  }
+
+  void _setBeautyValue() {
+    _engine.setBeautyValue("thin_face", 1.0);
   }
 }
