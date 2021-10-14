@@ -7,7 +7,21 @@
 //
 
 import AgoraRtcKit
+import MMBeautyKit
 import Foundation
+
+//enum MMSType: String {
+//    case Type1 = "skin_whitening"
+//}
+
+func mapType(_ type: String) -> MMBeautyFilterKey {
+    switch type {
+    case "skin_whitening":
+        return .RUDDY
+    default:
+        <#code#>
+    }
+}
 
 protocol RtcEngineInterface:
         RtcEngineUserInfoInterface,
@@ -30,7 +44,8 @@ protocol RtcEngineInterface:
         RtcEngineAudioRecorderInterface,
         RtcEngineInjectStreamInterface,
         RtcEngineCameraInterface,
-        RtcEngineStreamMessageInterface {
+        RtcEngineStreamMessageInterface,
+        RtcEngineBeuatyInterface{
     func create(_ params: NSDictionary, _ callback: Callback)
 
     func destroy(_ callback: Callback)
@@ -421,6 +436,15 @@ class RtcEngineManager: NSObject, RtcEngineInterface {
         callback.code(engine?.setAppType(AgoraRtcAppType(rawValue: (params["appType"] as! NSNumber).uintValue)!))
     }
 
+    @objc func setBeautyValue(_ params: NSDictionary, _ callback: Callback){
+        let type = params["beautyType"] as? String
+        let value = params["value"] as! Float
+        argoraMediaIO?.setBeautyFactor(value, forKey: .RUDDY)
+
+        
+    }
+    
+    
     @objc func destroy(_ callback: Callback) {
         callback.resolve(engine) { [weak self] _ in
             self?.Release()
@@ -1171,4 +1195,32 @@ class RtcEngineManager: NSObject, RtcEngineInterface {
     @objc func enableVirtualBackground(_ params: NSDictionary, _ callback: Callback) {
         callback.code(engine?.enableVirtualBackground(params["enabled"] as! Bool, backData: mapToVirtualBackgroundSource(params["backgroundSource"] as! [String: Any])))
     }
+}
+
+
+protocol RtcEngineBeuatyInterface {
+    // 设置美颜参数
+    func setBeautyValue(_ params: NSDictionary, _ callback: Callback)
+    
+//    // 设置一键美颜
+//    func setAutoBeauty(_ params: NSDictionary, _ callback: Callback)
+//
+//    // 设置滤镜
+//    func setLookupEffect(_ params: NSDictionary, _ callback: Callback)
+//    // 设置滤镜强度
+//    func setLookupIntensity(_ params: NSDictionary, _ callback: Callback)
+//    // 设置贴纸
+//    func addMaskModel(_ params: NSDictionary, _ callback: Callback)
+//    // 清除贴纸
+//    func clearMask(_ params: NSDictionary, _ callback: Callback)
+//    // 添加美妆
+//    func addMakeup(_ params: NSDictionary, _ callback: Callback)
+//    // 移除美妆
+//    func removeMakeup(_ params: NSDictionary, _ callback: Callback)
+//    // 修改口红质地
+//    func changeLipTextureType(_ params: NSDictionary, _ callback: Callback)
+//    // 清除所有美妆
+//    func clearMakeup(_ params: NSDictionary, _ callback: Callback)
+    
+    
 }

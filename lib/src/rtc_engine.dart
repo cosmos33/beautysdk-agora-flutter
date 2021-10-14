@@ -1298,7 +1298,14 @@ class RtcEngine with RtcEngineInterface {
   Future<void> setAutoBeauty(String autoType) {
     return _invokeMethod('setAutoBeauty', {'autoType': autoType});
   }
-
+  @override
+  Future<void> setReddenVersion(int version) {
+    return _invokeMethod('setReddenVersion', {'version': version});
+  }
+  @override
+  Future<void> setWhittenVersion(int version) {
+    return _invokeMethod('setWhittenVersion', {'version': version});
+  }
   @override
   Future<void> setLookupIntensity(double value) {
     return _invokeMethod('setLookupIntensity', {'value': value});
@@ -3444,12 +3451,23 @@ mixin MMBeautyInterface {
   ///整妆里的lookup
   static String MAKEUP_TYPE_MAKEUP_LUT = 'makeuplut';
 
+  // 设置一键美颜
+  static String MAKEUP_AUTO_TYPE_NORMAL    = 'Normal';
+  static String MAKEUP_AUTO_TYPE_NATURAL   = 'Natural';
+  static String MAKEUP_AUTO_TYPE_LOVELY    = 'Lovely';
+  static String MAKEUP_AUTO_TYPE_GODDESS   = 'Goddess';
+  static String MAKEUP_AUTO_TYPE_WHITENING = 'Whitening';
+
   ///基础美颜
   Future<void> setBeautyValue(String beautyType, double value);
 
   ///一键美颜
   Future<void> setAutoBeauty(String autoType);
 
+  ///设置美白版本
+  Future<void> setWhittenVersion(int version);
+  ///设置红润版本
+  Future<void> setReddenVersion(int version);
   ///滤镜
   Future<void> setLookupEffect(String path);
 

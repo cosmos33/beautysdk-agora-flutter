@@ -20,8 +20,7 @@ protocol RtcChannelInterface:
         RtcChannelMediaMetadataInterface,
         RtcChannelEncryptionInterface,
         RtcChannelInjectStreamInterface,
-        RtcChannelStreamMessageInterface,
-        RtcChannelBeuatyInterface{
+        RtcChannelStreamMessageInterface{
     func create(_ params: NSDictionary, _ callback: Callback)
 
     func destroy(_ params: NSDictionary, _ callback: Callback)
@@ -45,11 +44,6 @@ protocol RtcChannelInterface:
     func unpublish(_ params: NSDictionary, _ callback: Callback)
 
     func getCallId(_ params: NSDictionary, _ callback: Callback)
-}
-
-protocol RtcChannelBeuatyInterface {
-    func setBeautyValue(_ params: NSDictionary, _ callback: Callback)
-    
 }
 
 protocol RtcChannelAudioInterface {
@@ -143,9 +137,8 @@ protocol RtcChannelStreamMessageInterface {
 
     func sendStreamMessage(_ params: NSDictionary, _ callback: Callback)
 }
-
-@objc
 class RtcChannelManager: NSObject, RtcChannelInterface {
+    
     private var emitter: (_ methodName: String, _ data: [String: Any?]?) -> Void
     private var rtcChannelMap = [String: AgoraRtcChannel]()
     private var rtcChannelDelegateMap = [String: RtcChannelEventHandler]()

@@ -9,7 +9,7 @@
 #import "MMArgoraSourceMediaIO.h"
 #import "MDRecordCamera.h"
 #import "MMAgoraCamera.h"
-#import "MMBeautyRender.h"
+
 #import "MMDeviceMotionObserver.h"
 static void * kMDRecordCameraAdapterKey = &kMDRecordCameraAdapterKey;
 
@@ -18,7 +18,7 @@ static void * kMDRecordCameraAdapterKey = &kMDRecordCameraAdapterKey;
 @property (nonatomic, strong) MDRecordCamera *camera;
 @property (nonatomic, strong) MMAgoraCamera *agroCamera;
 @property (nonatomic, strong) dispatch_queue_t sessionQueue;
-@property (nonatomic, strong) MMBeautyRender *render;
+
 
 @property (nonatomic, assign) UIInterfaceOrientation orientation;
 @property (nonatomic, assign) AVCaptureDevicePosition position;
@@ -172,5 +172,56 @@ static void * kMDRecordCameraAdapterKey = &kMDRecordCameraAdapterKey;
         default:
             break;
     }
+}
+
+// 设置美颜参数
+- (void)setBeautyFactor:(float)value forKey:(MMBeautyFilterKey)key{
+    [self.render setBeautyFactor:value forKey:key];
+}
+
+- (void)setBeautyWhiteVersion:(NSInteger)version{
+    [self.render setBeautyWhiteVersion:version];
+}
+- (void)setBeautyreddenVersion:(NSInteger)version{
+    [self.render setBeautyreddenVersion:version];
+}
+
+- (void)setAutoBeautyWithType:(MMBeautyAutoType)type{
+    [self.render setAutoBeautyWithType:type];
+}
+- (void)setMakeupLipsType:(NSUInteger)type{
+    [self.render setMakeupLipsType:type];
+}
+// 设置lookup素材路径
+- (void)setLookupPath:(NSString *)lookupPath{
+    [self.render setLookupPath:lookupPath];
+    
+}
+// 设置lookup滤镜浓度
+- (void)setLookupIntensity:(CGFloat)intensity{
+    [self.render setLookupIntensity:intensity];
+}
+// 清除滤镜效果
+- (void)clearLookup{
+    [self.render clearLookup];
+}
+
+// 设置贴纸资源路径
+- (void)setMaskModelPath:(NSString *)path{
+    [self.render setMaskModelPath:path];
+}
+- (void)clearSticker{
+    [self.render clearSticker];
+}
+
+// 美妆效果
+- (void)addMakeupPath:(NSString *)path{
+    [self.render addMakeupPath:path];
+}
+- (void)clearMakeup{
+    [self.render clearMakeup];
+}
+- (void)removeMakeupLayerWithType:(MMBeautyFilterKey)type{
+    [self.render removeMakeupLayerWithType:type];
 }
 @end
