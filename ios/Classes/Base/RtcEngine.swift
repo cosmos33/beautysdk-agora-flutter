@@ -10,18 +10,7 @@ import AgoraRtcKit
 import MMBeautyKit
 import Foundation
 
-//enum MMSType: String {
-//    case Type1 = "skin_whitening"
-//}
 
-func mapType(_ type: String) -> MMBeautyFilterKey {
-    switch type {
-    case "skin_whitening":
-        return .RUDDY
-    default:
-        <#code#>
-    }
-}
 
 protocol RtcEngineInterface:
         RtcEngineUserInfoInterface,
