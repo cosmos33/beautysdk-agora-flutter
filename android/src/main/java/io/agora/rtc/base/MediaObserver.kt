@@ -1,6 +1,5 @@
 package io.agora.rtc.base
 
-import androidx.annotation.IntRange
 import io.agora.rtc.IMetadataObserver
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
@@ -15,7 +14,7 @@ class MediaObserver(
     metadataList.add(metadata)
   }
 
-  fun setMaxMetadataSize(@IntRange(from = 0, to = 1024) size: Int) {
+  fun setMaxMetadataSize(size: Int) {
     maxMetadataSize.set(size)
   }
 
