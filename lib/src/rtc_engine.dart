@@ -1301,7 +1301,7 @@ class RtcEngine with RtcEngineInterface {
 
   @override
   Future<void> setLookupIntensity(double value) {
-    return _invokeMethod('setIntensity', {'value': value});
+    return _invokeMethod('setLookupIntensity', {'value': value});
   }
 
   @override
@@ -1310,9 +1310,9 @@ class RtcEngine with RtcEngineInterface {
   }
 
   @override
-  Future<void> setBeautyValue(String beautyBype, double value) {
+  Future<void> setBeautyValue(String beautyType, double value) {
     return _invokeMethod(
-        'setValue', {'beautyBype': beautyBype, 'value': value});
+        'setBeautyValue', {'beautyType': beautyType, 'value': value});
   }
 }
 
@@ -3339,8 +3339,113 @@ mixin RtcStreamMessageInterface {
 
 /// @nodoc 美颜sdk接口
 mixin MMBeautyInterface {
+  ///美白
+  static String BEAUTY_TYPE_SKIN_WHITENING = 'skin_whitening';
+
+  ///磨皮
+  static String BEAUTY_TYPE_SKIN_SMOOTH = 'skin_smooth';
+
+  ///锐化
+  static String BEAUTY_TYPE_SHARPEN = 'sharpen';
+
+  ///大眼
+  static String BEAUTY_TYPE_BIG_EYE = 'big_eye';
+
+  ///瘦脸
+  static String BEAUTY_TYPE_THIN_FACE = 'thin_face';
+
+  ///红润
+  static String BEAUTY_TYPE_RUDDY = 'ruddy';
+
+  ///削脸
+  static String BEAUTY_TYPE_JAW_SHAPE = 'jaw_shape';
+
+  ///脸宽
+  static String BEAUTY_TYPE_FACE_WIDTH = 'face_width';
+
+  ///下巴
+  static String BEAUTY_TYPE_CHIN_LENGTH = 'chin_length';
+
+  ///额头
+  static String BEAUTY_TYPE_FOREHEAD = 'forehead';
+
+  ///短脸
+  static String BEAUTY_TYPE_SHORTEN_FACE = 'shorten_face';
+
+  ///眼睛角度
+  static String BEAUTY_TYPE_EYE_TILT = 'eye_tilt';
+
+  ///眼距
+  static String BEAUTY_TYPE_EYE_DISTANCE = 'eye_distance';
+
+  ///鼻高
+  static String BEAUTY_TYPE_NOSE_LIFT = 'nose_lift';
+
+  ///鼻子大小
+  static String BEAUTY_TYPE_NOSE_SIZE = 'nose_size';
+
+  ///鼻宽
+  static String BEAUTY_TYPE_NOSE_WIDTH = 'nose_width';
+
+  ///鼻梁
+  static String BEAUTY_TYPE_NOSE_RIDGE_WIDTH = 'nose_ridge_width';
+
+  ///鼻尖
+  static String BEAUTY_TYPE_NOSE_TIP_SIZE = 'nose_tip_size';
+
+  ///嘴唇厚度
+  static String BEAUTY_TYPE_LIP_THICKNESS = 'lip_thickness';
+
+  ///嘴唇大小
+  static String BEAUTY_TYPE_MOUTH_SIZE = 'mouth_size';
+
+  ///祛法令纹
+  static String BEAUTY_TYPE_NASOLABIAL_FOLDS = 'nasolabial_folds';
+
+  ///眼高
+  static String BEAUTY_TYPE_EYE_HEIGHT = 'eye_height';
+
+  ///亮眼
+  static String BEAUTY_TYPE_EYE_BRIGHT = 'eye_bright';
+
+  ///眼袋
+  static String BEAUTY_TYPE_SKIN_SMOOTHING_EYES = 'skin_smoothing_eyes';
+
+  ///颧骨
+  static String BEAUTY_TYPE_CHEEKBONE_WIDTH = 'cheekbone_width';
+
+  ///下颌骨
+  static String BEAUTY_TYPE_JAW_WIDTH = 'jaw_width';
+
+  ///白牙
+  static String BEAUTY_TYPE_TEETH_WHITE = 'TEETH_WHITE';
+
+  ///腮红
+  static String MAKEUP_TYPE_MAKEUP_BLUSH = 'blush';
+
+  ///眉毛
+  static String MAKEUP_TYPE_MAKEUP_EYEBOW = 'eyebrow';
+
+  ///眼影
+  static String MAKEUP_TYPE_MAKEUP_EYESHADOW = 'eyeshadow';
+
+  ///口红
+  static String MAKEUP_TYPE_MAKEUP_LIP = 'lip';
+
+  ///修容
+  static String MAKEUP_TYPE_MAKEUP_FACIAL = 'facial';
+
+  ///瞳孔
+  static String MAKEUP_TYPE_MAKEUP_PUPIL = 'pupil';
+
+  ///整妆
+  static String MAKEUP_TYPE_MAKEUP_STYLE = 'makeupstyle';
+
+  ///整妆里的lookup
+  static String MAKEUP_TYPE_MAKEUP_LUT = 'makeuplut';
+
   ///基础美颜
-  Future<void> setBeautyValue(String beautyBype, double value);
+  Future<void> setBeautyValue(String beautyType, double value);
 
   ///一键美颜
   Future<void> setAutoBeauty(String autoType);

@@ -12,6 +12,7 @@ import com.cosmos.beauty.module.IMMRenderModuleManager;
 import com.cosmos.beauty.module.beauty.IBeautyModule;
 import com.cosmos.beauty.module.beauty.SimpleBeautyType;
 import com.cosmos.beauty.module.lookup.ILookupModule;
+import com.cosmos.beauty.module.makeup.IMakeupBeautyModule;
 import com.cosmos.beauty.module.sticker.DetectRect;
 import com.cosmos.beauty.module.sticker.IStickerModule;
 import com.cosmos.beauty.module.sticker.MaskLoadCallback;
@@ -34,7 +35,7 @@ abstract public class BeautyManager implements IMMRenderModuleManager.CVModelSta
   protected boolean filterResouceSuccess = false;
   protected boolean cvModelSuccess = false;
   protected boolean stickerSuccess;
-  protected IBeautyModule iBeautyModule;
+  protected IMakeupBeautyModule iBeautyModule;
   protected ILookupModule iLookupModule;
   protected IStickerModule iStickerModule;
   protected boolean resourceReady = false;
@@ -96,8 +97,6 @@ abstract public class BeautyManager implements IMMRenderModuleManager.CVModelSta
 
   private void initSDK() {
     BeautySDKInitConfig beautySDKInitConfig = new BeautySDKInitConfig.Builder(appId)
-      .setUserVersionCode(BuildConfig.VERSION_CODE)
-      .setUserVersionName(BuildConfig.VERSION_NAME)
       .build();
     CosmosBeautySDK.INSTANCE.init(context, beautySDKInitConfig, new OnAuthenticationStateListener() {
       public void onResult(AuthResult result) {
@@ -139,7 +138,6 @@ abstract public class BeautyManager implements IMMRenderModuleManager.CVModelSta
 
   private void checkResouceReady() {
     if (cvModelSuccess && filterResouceSuccess && authSuccess && stickerSuccess) {
-//            Toaster.show("美颜sdk资源准备就绪！！");
       MainThreadExecutor.post(new Runnable() {
         @Override
         public void run() {
@@ -151,31 +149,14 @@ abstract public class BeautyManager implements IMMRenderModuleManager.CVModelSta
   }
 
   protected void initRender() {
-    iBeautyModule = CosmosBeautySDK.INSTANCE.createBeautyModule();
+    iBeautyModule = CosmosBeautySDK.INSTANCE.createMakeupBeautyModule();
     renderModuleManager.registerModule(iBeautyModule);
-    iBeautyModule.setValue(SimpleBeautyType.BIG_EYE, 1f);
-//        iBeautyModule.setValue(SimpleBeautyType.SKIN_SMOOTH, 1.0f);
-//        iBeautyModule.setValue(SimpleBeautyType.SKIN_WHITENING, 1.0f);
-    iBeautyModule.setValue(SimpleBeautyType.THIN_FACE, 1f);
 
     iLookupModule = CosmosBeautySDK.INSTANCE.createLoopupModule();
     renderModuleManager.registerModule(iLookupModule);
-//        iLookupModule.setEffect(FilterUtils.INSTANCE.getFilterHomeDir().getAbsolutePath() + "/GrayTone");
-    iLookupModule.setIntensity(0.2f);
 
     iStickerModule = CosmosBeautySDK.INSTANCE.createStickerModule();
     renderModuleManager.registerModule(iStickerModule);
-    iStickerModule.addMaskModel(
-      new File(context.getFilesDir().getAbsolutePath() + "/facemasksource/", "rainbow_engine"),
-      new MaskLoadCallback() {
-
-        @Override
-        public void onMaskLoadSuccess(MaskModel maskModel) {
-          if (maskModel == null) {
-            Toaster.show("贴纸加载失败");
-          }
-        }
-      });
   }
 
   @Override
