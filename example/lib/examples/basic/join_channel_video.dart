@@ -148,16 +148,42 @@ class _State extends State<JoinChannelVideo> {
         ),
         Align(
           alignment: Alignment.bottomLeft,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
+          child: Row(
+            verticalDirection: VerticalDirection.down,
             children: [
-              ElevatedButton(
-                onPressed: this._setBeautyValue,
-                child: Text('瘦脸'),
+              Expanded(
+                flex: 0,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        _engine.setBeautyValue(
+                            MMBeautyInterface.BEAUTY_TYPE_THIN_FACE, 1.0);
+                      },
+                      child: Text('瘦脸'),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                flex: 0,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        _engine.setBeautyValue(
+                            MMBeautyInterface.BEAUTY_TYPE_BIG_EYE, 1.0);
+                      },
+                      child: Text('大眼'),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
-        )
+        ),
       ],
     );
   }
@@ -190,9 +216,5 @@ class _State extends State<JoinChannelVideo> {
         ],
       ),
     );
-  }
-
-  void _setBeautyValue() {
-    _engine.setBeautyValue("thin_face", 1.0);
   }
 }
