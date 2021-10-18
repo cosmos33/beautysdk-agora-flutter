@@ -32,10 +32,10 @@ flutter_ios_podfile_setup
 target 'Runner' do
   #use_frameworks! 
   use_modular_headers!
-  pod 'MMBeautyKit', '2.8.2-interact'
-  pod 'MMBeautyMedia','2.8.1'
-  pod 'MMCV','2.8.1'
-  pod 'MMBeautyUI','0.0.1'
+  pod 'MMBeautyKit', '2.8.3-interact'
+  pod 'MMBeautyMedia','2.8.3'
+  pod 'MMCV','2.8.3'
+  #pod 'MMBeautyUI','0.0.2'
   pod 'MetalPetal/Static', '1.13.0', :source => 'https://github.com/cosmos33/MMSpecs.git'
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 end

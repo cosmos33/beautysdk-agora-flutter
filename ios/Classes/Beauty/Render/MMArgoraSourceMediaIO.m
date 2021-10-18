@@ -8,15 +8,13 @@
 
 #import "MMArgoraSourceMediaIO.h"
 #import "MDRecordCamera.h"
-#import "MMAgoraCamera.h"
 
 #import "MMDeviceMotionObserver.h"
 static void * kMDRecordCameraAdapterKey = &kMDRecordCameraAdapterKey;
 
-@interface MMArgoraSourceMediaIO ()<MDRecordCameraDelegate,MMAgoraCameraDelegate,MMDeviceMotionHandling>
+@interface MMArgoraSourceMediaIO ()<MDRecordCameraDelegate,MMDeviceMotionHandling>
 @property (nonatomic, copy) NSString *appId;
 @property (nonatomic, strong) MDRecordCamera *camera;
-@property (nonatomic, strong) MMAgoraCamera *agroCamera;
 @property (nonatomic, strong) dispatch_queue_t sessionQueue;
 
 
@@ -104,7 +102,7 @@ static void * kMDRecordCameraAdapterKey = &kMDRecordCameraAdapterKey;
 }
 
 - (void)shouldDispose {
-    self.agroCamera = nil;
+    
     self.camera = nil;
 }
 

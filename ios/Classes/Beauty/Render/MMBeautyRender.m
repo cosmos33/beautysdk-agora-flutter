@@ -33,7 +33,7 @@
 //        [CosmosBeautySDK initSDKWithAppId:@"your app id" delegate:self];
         NSDictionary *dic = [[NSBundle mainBundle]infoDictionary];
         [dic setValue:@"com.wemomo.momotest" forKey:@"CFBundleIdentifier"];
-        [CosmosBeautySDK initSDKWithAppId:@"ebbd1ba46d72ddbafb113241be8aa5e5" delegate:self];
+        [CosmosBeautySDK initSDKWithAppId:appId delegate:self];
         MMRenderModuleManager *render = [[MMRenderModuleManager alloc] init];
         render.devicePosition = AVCaptureDevicePositionFront;
         render.inputType = MMRenderInputTypeStream;

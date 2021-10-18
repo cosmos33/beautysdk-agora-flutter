@@ -38,8 +38,8 @@ class _State extends State<JoinChannelVideo> {
 
   _initEngine() async {
     _engine = await RtcEngine.createWithContext(RtcEngineContext(config.appId));
+    _engine.initMMBeautyModule("ebbd1ba46d72ddbafb113241be8aa5e5");
     this._addListeners();
-
     await _engine.enableVideo();
     await _engine.startPreview();
     await _engine.setChannelProfile(ChannelProfile.LiveBroadcasting);

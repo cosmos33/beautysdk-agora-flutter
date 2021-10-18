@@ -415,11 +415,16 @@ class RtcEngineManager: NSObject, RtcEngineInterface {
         }
         engine = AgoraRtcEngineKit.sharedEngine(with: mapToRtcEngineConfig(params["config"] as! [String: Any]), delegate: delegate)
         let configuration = AgoraVideoEncoderConfiguration.init(size: AgoraVideoDimension640x480, frameRate:.fps15, bitrate: AgoraVideoBitrateStandard, orientationMode: .fixedPortrait)
-        argoraMediaIO = MMArgoraSourceMediaIO.init(beautyAppID: "xxxx")
         engine?.setVideoEncoderConfiguration(configuration)
         
-        engine?.setVideoSource(argoraMediaIO)
         callback.code(engine?.setAppType(AgoraRtcAppType(rawValue: (params["appType"] as! NSNumber).uintValue)!))
+    }
+    
+    @objc func  initMMBeautyModule(_ params: NSDictionary, _ callback: Callback){
+        if let appid = params["appId"] as? String {
+            argoraMediaIO = MMArgoraSourceMediaIO.init(beautyAppID: appid)
+            engine?.setVideoSource(argoraMediaIO)
+        }
     }
 
     @objc func setBeautyValue(_ params: NSDictionary, _ callback: Callback){
@@ -1242,6 +1247,7 @@ class RtcEngineManager: NSObject, RtcEngineInterface {
 
 
 protocol RtcEngineBeuatyInterface {
+    func initMMBeautyModule(_ params: NSDictionary, _ callback: Callback)
     // 设置美颜参数
     func setBeautyValue(_ params: NSDictionary, _ callback: Callback)
     
