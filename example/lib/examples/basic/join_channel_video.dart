@@ -174,9 +174,24 @@ class _State extends State<JoinChannelVideo> {
                     ElevatedButton(
                       onPressed: () {
                         _engine.setBeautyValue(
-                            MMBeautyInterface.BEAUTY_TYPE_BIG_EYE, 1.0);
+                            MMBeautyInterface.BEAUTY_TYPE_SKIN_SMOOTH, 1.0);
                       },
                       child: Text('大眼'),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                flex: 0,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        _engine.setAutoBeauty(
+                            MMBeautyInterface.MAKEUP_AUTO_TYPE_WHITENING);
+                      },
+                      child: Text('风格妆'),
                     ),
                   ],
                 ),

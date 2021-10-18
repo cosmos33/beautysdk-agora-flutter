@@ -9,9 +9,6 @@
 import AgoraRtcKit
 import MMBeautyKit
 import Foundation
-
-
-
 protocol RtcEngineInterface:
         RtcEngineUserInfoInterface,
         RtcEngineAudioInterface,
@@ -426,13 +423,70 @@ class RtcEngineManager: NSObject, RtcEngineInterface {
     }
 
     @objc func setBeautyValue(_ params: NSDictionary, _ callback: Callback){
-        let type = params["beautyType"] as? String
-        let value = params["value"] as! Float
-        argoraMediaIO?.setBeautyFactor(value, forKey: .RUDDY)
-
-        
+        if let type = params["beautyType"] as? String {
+            let value = params["value"] as! Float
+            argoraMediaIO?.setBeautyFactor(value, forKey: getMMBeautyTypeKey(type));
+            return
+        }
+    }
+    @objc func setAutoBeauty(_ params: NSDictionary, _ callback: Callback) {
+        if let type = params["autoType"] as? String {
+            argoraMediaIO?.setAutoBeautyWith(getMMAutoBeautyType(type))
+            return
+        }
     }
     
+    // 设置滤镜
+    @objc func setLookupEffect(_ params: NSDictionary, _ callback: Callback) {
+        if let path = params["path"] as? String {
+            argoraMediaIO?.setLookupPath(path)
+            return
+        }
+    }
+    
+    // 设置滤镜强度
+    @objc func setLookupIntensity(_ params: NSDictionary, _ callback: Callback) {
+        if let value = params["value"] as? Float {
+            argoraMediaIO?.setLookupIntensity(CGFloat(value))
+            return
+        }
+    }
+    // 设置贴纸
+    @objc func addMaskModel(_ params: NSDictionary, _ callback: Callback) {
+        if let maskPath = params["maskPath"] as? String {
+            argoraMediaIO?.setMaskModelPath(maskPath);
+            return
+        }
+    }
+    // 清除贴纸
+    @objc func clearMask(_ params: NSDictionary, _ callback: Callback) {
+        argoraMediaIO?.clearSticker()
+    }
+    // 添加美妆
+    @objc func addMakeup(_ params: NSDictionary, _ callback: Callback) {
+        if let path = params["path"] as? String {
+            argoraMediaIO?.addMakeupPath(path)
+            return
+        }
+    }
+    // 移除美妆
+    @objc func removeMakeup(_ params: NSDictionary, _ callback: Callback) {
+        if let type = params["type"] as? String {
+            argoraMediaIO?.removeMakeupLayer(withType: getMMBeautyTypeKey(type))
+            return
+        }
+    }
+    // 修改口红质地
+    @objc func changeLipTextureType(_ params: NSDictionary, _ callback: Callback) {
+        if let type = params["type"] as? Int {
+            argoraMediaIO?.setMakeupLipsType(UInt(type))
+            return
+        }
+    }
+    // 清除所有美妆
+    @objc func clearMakeup(_ params: NSDictionary, _ callback: Callback) {
+        argoraMediaIO?.clearMakeup()
+    }
     
     @objc func destroy(_ callback: Callback) {
         callback.resolve(engine) { [weak self] _ in
@@ -1192,24 +1246,24 @@ protocol RtcEngineBeuatyInterface {
     func setBeautyValue(_ params: NSDictionary, _ callback: Callback)
     
 //    // 设置一键美颜
-//    func setAutoBeauty(_ params: NSDictionary, _ callback: Callback)
-//
-//    // 设置滤镜
-//    func setLookupEffect(_ params: NSDictionary, _ callback: Callback)
-//    // 设置滤镜强度
-//    func setLookupIntensity(_ params: NSDictionary, _ callback: Callback)
-//    // 设置贴纸
-//    func addMaskModel(_ params: NSDictionary, _ callback: Callback)
-//    // 清除贴纸
-//    func clearMask(_ params: NSDictionary, _ callback: Callback)
-//    // 添加美妆
-//    func addMakeup(_ params: NSDictionary, _ callback: Callback)
-//    // 移除美妆
-//    func removeMakeup(_ params: NSDictionary, _ callback: Callback)
-//    // 修改口红质地
-//    func changeLipTextureType(_ params: NSDictionary, _ callback: Callback)
-//    // 清除所有美妆
-//    func clearMakeup(_ params: NSDictionary, _ callback: Callback)
+    func setAutoBeauty(_ params: NSDictionary, _ callback: Callback)
+
+    // 设置滤镜
+    func setLookupEffect(_ params: NSDictionary, _ callback: Callback)
+    // 设置滤镜强度
+    func setLookupIntensity(_ params: NSDictionary, _ callback: Callback)
+    // 设置贴纸
+    func addMaskModel(_ params: NSDictionary, _ callback: Callback)
+    // 清除贴纸
+    func clearMask(_ params: NSDictionary, _ callback: Callback)
+    // 添加美妆
+    func addMakeup(_ params: NSDictionary, _ callback: Callback)
+    // 移除美妆
+    func removeMakeup(_ params: NSDictionary, _ callback: Callback)
+    // 修改口红质地
+    func changeLipTextureType(_ params: NSDictionary, _ callback: Callback)
+    // 清除所有美妆
+    func clearMakeup(_ params: NSDictionary, _ callback: Callback)
     
     
 }

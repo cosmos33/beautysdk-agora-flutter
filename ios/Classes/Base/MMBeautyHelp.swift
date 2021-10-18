@@ -9,7 +9,7 @@ import Foundation
 import MMBeautyKit
 
 
-func getMMBeautyKeyType(_ type: String) -> MMBeautyFilterKey {
+func getMMBeautyTypeKey(_ type: String) -> MMBeautyFilterKey {
     switch type {
     case "skin_whitening":
         return .SKIN_WHITENING
@@ -63,19 +63,42 @@ func getMMBeautyKeyType(_ type: String) -> MMBeautyFilterKey {
         return .CHEEKBONE_WIDTH
     case "jaw_width":
         return .JAW2_WIDTH
-    case "eye_tilt":
-        return .EYE_TILT
-    case "eye_tilt":
-        return .EYE_TILT
-    case "eye_tilt":
-        return .EYE_TILT
-    case "eye_tilt":
-        return .EYE_TILT
-    case "eye_tilt":
-        return .EYE_TILT
-        
-        
+    case "teeth_white":
+        return .TEETHWHITEN
+    case "blush":
+        return .BLUSH
+    case "eyebrow":
+        return .EYEBROW
+    case "eyeshadow":
+        return .EYESHADOW
+    case "lip":
+        return .LIP
+    case "facial":
+        return .FACIAL
+    case "pupil":
+        return .PUPIL
+    case "makeupstyle":
+        return .MAKEUPALL
+    case "makeuplut":
+        return .MAKEUPLUT
     default:
         return .SKIN_WHITENING
+    }
+}
+
+func getMMAutoBeautyType(_ type:String) -> MMBeautyAutoType {
+    switch type {
+    case "null":
+        return .type_Normal
+    case "natural":
+        return .type_Natural
+    case "cute":
+        return .type_Lovely
+    case "goddess":
+        return .type_Goddess
+    case "purewhite":
+        return .type_Whitening
+    default:
+        return .type_Normal
     }
 }
