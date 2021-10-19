@@ -22,8 +22,6 @@
 
 - (instancetype)initWithAppId:(NSString *)appId{
     if (self = [super init]) {
-        NSDictionary *dic = [[NSBundle mainBundle]infoDictionary];
-        [dic setValue:@"com.wemomo.momotest" forKey:@"CFBundleIdentifier"];
         [CosmosBeautySDK initSDKWithAppId:appId delegate:self];
         MMRenderModuleManager *render = [[MMRenderModuleManager alloc] init];
         render.devicePosition = AVCaptureDevicePositionFront;
