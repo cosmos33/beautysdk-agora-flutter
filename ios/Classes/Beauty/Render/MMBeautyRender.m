@@ -8,21 +8,13 @@
 
 #import "MMBeautyRender.h"
 
-#define LOOKUP 1
-#define STICKER 1
 
 @interface MMBeautyRender () <CosmosBeautySDKDelegate>
 @property (nonatomic, copy) NSString *appId;
 @property (nonatomic, strong) MMRenderModuleManager *render;
 @property (nonatomic, strong) MMRenderFilterBeautyMakeupModule *beautyDescriptor;
-
-#if LOOKUP == 1
 @property (nonatomic, strong) MMRenderFilterLookupModule *lookupDescriptor;
-#endif
-
-#if STICKER == 1
 @property (nonatomic, strong) MMRenderFilterStickerModule *stickerDescriptor;
-#endif
 
 @end
 
@@ -30,9 +22,7 @@
 
 - (instancetype)initWithAppId:(NSString *)appId{
     if (self = [super init]) {
-//        [CosmosBeautySDK initSDKWithAppId:@"your app id" delegate:self];
-        NSDictionary *dic = [[NSBundle mainBundle]infoDictionary];
-        [dic setValue:@"com.wemomo.momotest" forKey:@"CFBundleIdentifier"];
+        NSAssert(appId == nil, @"appId must not bey nil");
         [CosmosBeautySDK initSDKWithAppId:appId delegate:self];
         MMRenderModuleManager *render = [[MMRenderModuleManager alloc] init];
         render.devicePosition = AVCaptureDevicePositionFront;
@@ -42,19 +32,12 @@
         _beautyDescriptor = [[MMRenderFilterBeautyMakeupModule alloc] init];
         [render registerModule:_beautyDescriptor];
         
-#if LOOKUP == 1
         _lookupDescriptor = [[MMRenderFilterLookupModule alloc] init];
         [render registerModule:_lookupDescriptor];
-#endif
-        
-#if STICKER == 1
+
         _stickerDescriptor = [[MMRenderFilterStickerModule alloc] init];
         [render registerModule:_stickerDescriptor];
-#endif
-        NSLog(@"level = %@", [CosmosBeautySDK performSelector:NSSelectorFromString(@"__authKeys__")]);
     }
-           
-        return self;
     return self;
 }
 
@@ -74,34 +57,26 @@
 }
 
 - (void)addLookup {
-#if LOOKUP == 1
     _lookupDescriptor = [[MMRenderFilterLookupModule alloc] init];
     [_render registerModule:_lookupDescriptor];
-#endif
 }
 
 - (void)removeLookup {
-#if LOOKUP == 1
     [_render unregisterModule:_lookupDescriptor];
     _lookupDescriptor = nil;
-#endif
 }
 - (void)setMakeupLipsType:(NSUInteger)type{
-//    [_beautyDescriptor setMakeupLipsType:type];
+    [_beautyDescriptor setMakeupLipsType:type];
 }
 
 - (void)addSticker {
-#if STICKER == 1
     _stickerDescriptor = [[MMRenderFilterStickerModule alloc] init];
     [_render registerModule:_stickerDescriptor];
-#endif
 }
 
 - (void)removeSticker {
-#if STICKER == 1
     [_render unregisterModule:_stickerDescriptor];
     _stickerDescriptor = nil;
-#endif
 }
 
 - (CVPixelBufferRef _Nullable)renderPixelBuffer:(CVPixelBufferRef)pixelBuffer
@@ -166,34 +141,27 @@
 }
 
 - (void)setLookupPath:(NSString *)lookupPath {
-#if LOOKUP == 1
     [self.lookupDescriptor setLookupResourcePath:lookupPath];
     [self.lookupDescriptor setIntensity:1.0];
-#endif
 }
 
 - (void)setLookupIntensity:(CGFloat)intensity {
-#if LOOKUP == 1
     [self.lookupDescriptor setIntensity:intensity];
-#endif
 }
 
 - (void)clearLookup {
-#if LOOKUP == 1
+
     [self.lookupDescriptor clear];
-#endif
 }
 
 - (void)setMaskModelPath:(NSString *)path {
-#if STICKER == 1
+
     [self.stickerDescriptor setMaskModelPath:path];
-#endif
+
 }
 
 - (void)clearSticker {
-#if STICKER == 1
     [self.stickerDescriptor clear];
-#endif
 }
 // 美妆效果
 - (void)clearMakeup {
