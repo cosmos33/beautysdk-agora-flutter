@@ -235,7 +235,7 @@ AVCaptureMetadataOutputObjectsDelegate
 - (void)configVideoConnection {
     if (self.videoConnection) {
         if ([self.videoConnection isVideoMirroringSupported]) {
-            self.videoConnection.videoMirrored = NO;
+            self.videoConnection.videoMirrored = (self.videoDevice.position == AVCaptureDevicePositionFront);
         }
         
         if ([self.videoConnection isVideoOrientationSupported]) {

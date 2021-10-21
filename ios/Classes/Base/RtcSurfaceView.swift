@@ -86,7 +86,7 @@ class RtcSurfaceView: UIView {
 
     private func setupRenderMode(_ engine: AgoraRtcEngineKit) {
         if canvas.uid == 0 {
-            engine.setLocalRenderMode(canvas.renderMode, mirrorMode: canvas.mirrorMode)
+            engine.setLocalRenderMode(canvas.renderMode, mirrorMode: .disabled)
         } else {
             if let channel = channel {
                 channel.setRemoteRenderMode(canvas.uid, renderMode: canvas.renderMode, mirrorMode: canvas.mirrorMode)

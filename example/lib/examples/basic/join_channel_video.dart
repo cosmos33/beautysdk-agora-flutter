@@ -263,6 +263,7 @@ class _State extends State<JoinChannelVideo> {
     var documents = await getApplicationDocumentsDirectory();
     // 设定要解压的目标文件夹
     var root = documents.path;
+
     resourceRoot = root + '/mmbeautyresource';
     if (await File(root).exists()) {
       return;

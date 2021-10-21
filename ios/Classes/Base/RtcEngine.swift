@@ -458,7 +458,7 @@ class RtcEngineManager: NSObject, RtcEngineInterface {
     }
     // 设置贴纸
     @objc func addMaskModel(_ params: NSDictionary, _ callback: Callback) {
-        if let maskPath = params["maskPath"] as? String {
+        if let maskPath = params["path"] as? String {
             argoraMediaIO?.setMaskModelPath(maskPath);
             return
         }
