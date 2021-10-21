@@ -380,6 +380,8 @@ class IRtcEngine {
     fun initMMBeautyModule(data: Map<String, Any?>?, callback: Callback)
     fun setBeautyValue(data: Map<String, Any?>?, callback: Callback)
     fun setAutoBeauty(data: Map<String, Any?>?, callback: Callback)
+    fun setWhittenVersion(data: Map<String, Any?>?, callback: Callback)
+    fun setReddenVersion(data: Map<String, Any?>?, callback: Callback)
     fun setLookupEffect(data: Map<String, Any?>?, callback: Callback)
     fun setLookupIntensity(data: Map<String, Any?>?, callback: Callback)
     fun addMaskModel(data: Map<String, Any?>?, callback: Callback)
@@ -1378,6 +1380,14 @@ class RtcEngineManager(
 
   override fun setAutoBeauty(data: Map<String, Any?>?, callback: Callback) {
     agoraRawDataBeautyManager?.setAutoBeauty(data!!["autoType"] as String)
+  }
+
+  override fun setWhittenVersion(data: Map<String, Any?>?, callback: Callback) {
+    agoraRawDataBeautyManager?.setWhiteVersion(data!!["version"] as Int)
+  }
+
+  override fun setReddenVersion(data: Map<String, Any?>?, callback: Callback) {
+    agoraRawDataBeautyManager?.setRuddyVersion(data!!["version"] as Int)
   }
 
   override fun setLookupEffect(data: Map<String, Any?>?, callback: Callback) {
