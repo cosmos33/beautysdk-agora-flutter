@@ -3470,10 +3470,10 @@ mixin MMBeautyInterface {
   ///一键美颜
   Future<void> setAutoBeauty(String autoType);
 
-  ///设置美白版本
+  ///设置美白版本 取值[0,1,2]
   Future<void> setWhittenVersion(int version);
 
-  ///设置红润版本
+  ///设置红润版本 取值[0,1]
   Future<void> setReddenVersion(int version);
   ///滤镜
   Future<void> setLookupEffect(String path);

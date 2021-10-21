@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.core.glcore.cv.MMCVInfo;
 import com.cosmos.beauty.CosmosBeautySDK;
+import com.cosmos.beauty.filter.BeautyType;
 import com.cosmos.beauty.inter.OnAuthenticationStateListener;
 import com.cosmos.beauty.inter.OnBeautyResourcePreparedListener;
 import com.cosmos.beauty.model.AuthResult;
@@ -271,5 +272,34 @@ abstract public class BeautyManager implements IMMRenderModuleManager.CVModelSta
       return ;
     }
     iBeautyModule.changeLipTextureType(type);
+  }
+
+  public void setWhiteVersion(int type) {
+    if (iBeautyModule != null) {
+      switch (type) {
+        case 0:
+          iBeautyModule.setWhiteType(BeautyType.WHITETYPE.WHITE_T1);
+          break;
+        case 1:
+          iBeautyModule.setWhiteType(BeautyType.WHITETYPE.WHITE_T2);
+          break;
+        case 2:
+          iBeautyModule.setWhiteType(BeautyType.WHITETYPE.WHITE_T3);
+          break;
+      }
+    }
+  }
+
+  public void setRuddyVersion(int type) {
+    if (iBeautyModule != null) {
+      switch (type) {
+        case 0:
+          iBeautyModule.setRuddyType(BeautyType.RUDDYTYPE.RUDDY_T1);
+          break;
+        case 1:
+          iBeautyModule.setRuddyType(BeautyType.RUDDYTYPE.RUDDY_T2);
+          break;
+      }
+    }
   }
 }
