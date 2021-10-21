@@ -1,12 +1,18 @@
 import 'dart:developer';
+import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
 import 'package:agora_rtc_engine_example/config/agora.config.dart' as config;
+import 'package:archive/archive.dart';
+import 'package:archive/archive_io.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 /// MultiChannel Example
@@ -21,11 +27,12 @@ class _State extends State<JoinChannelVideo> {
   bool isJoined = false, switchCamera = true, switchRender = true;
   List<int> remoteUid = [];
   TextEditingController? _controller;
+  String resourceRoot = "";
 
   @override
   void initState() {
     super.initState();
-    log('波仔看看你执行了吗');
+    unzip();
     _controller = TextEditingController(text: channelId);
     this._initEngine();
   }
@@ -38,8 +45,12 @@ class _State extends State<JoinChannelVideo> {
 
   _initEngine() async {
     _engine = await RtcEngine.createWithContext(RtcEngineContext(config.appId));
-    _engine.initMMBeautyModule("ebbd1ba46d72ddbafb113241be8aa5e5");
+    _engine.initMMBeautyModule(config.mmAppId);
     this._addListeners();
+
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      await [Permission.microphone, Permission.camera].request();
+    }
     await _engine.enableVideo();
     await _engine.startPreview();
     await _engine.setChannelProfile(ChannelProfile.LiveBroadcasting);
@@ -176,7 +187,7 @@ class _State extends State<JoinChannelVideo> {
                         _engine.setBeautyValue(
                             MMBeautyInterface.BEAUTY_TYPE_SKIN_SMOOTH, 1.0);
                       },
-                      child: Text('大眼'),
+                      child: Text('磨皮'),
                     ),
                   ],
                 ),
@@ -191,7 +202,21 @@ class _State extends State<JoinChannelVideo> {
                         _engine.setAutoBeauty(
                             MMBeautyInterface.MAKEUP_AUTO_TYPE_WHITENING);
                       },
-                      child: Text('风格妆'),
+                      child: Text('一键美颜'),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                flex: 0,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        _engine.addMaskModel(resourceRoot + "/facemask/cold");
+                      },
+                      child: Text('贴纸'),
                     ),
                   ],
                 ),
@@ -231,5 +256,35 @@ class _State extends State<JoinChannelVideo> {
         ],
       ),
     );
+  }
+
+  /// 解压zip文件
+  Future<void> unzip() async {
+    var documents = await getApplicationDocumentsDirectory();
+    // 设定要解压的目标文件夹
+    var root = documents.path;
+    resourceRoot = root + '/mmbeautyresource';
+    if (await File(root).exists()) {
+      return;
+    }
+    // 加载assets资源
+    var ass = await rootBundle.load('assets/mmbeautyresource.zip');
+    // 获取2进制内容
+    Uint8List bytes = ass.buffer.asUint8List();
+    // 解压
+    final archive = ZipDecoder().decodeBytes(bytes);
+
+    // 解压文件到磁盘
+    for (final file in archive) {
+      final filename = file.name;
+      if (file.isFile) {
+        final data = file.content as List<int>;
+        File('$root/$filename')
+          ..createSync(recursive: true) // 同步创建文件
+          ..writeAsBytesSync(data); // 将解压出来的文件内容写入到文件
+      } else {
+        Directory('$root/$filename')..create(recursive: true);
+      }
+    }
   }
 }

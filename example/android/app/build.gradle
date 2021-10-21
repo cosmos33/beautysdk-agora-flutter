@@ -39,7 +39,7 @@ android {
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         // TODO mmbeauty 配置cosmos后台配置的applicationid
-        applicationId "com.cosmos.beautydemo_newauth"
+        applicationId ""
         minSdkVersion 21
         targetSdkVersion 28
         versionCode flutterVersionCode.toInteger()
@@ -53,10 +53,10 @@ android {
 
   signingConfigs {
     config { // TODO mmbeauty 配置cosmos后台配置的keystore
-      keyAlias 'cosmos'
-      keyPassword 'mmtest'
-      storeFile file('keystore')
-      storePassword 'mmtest'
+      keyAlias ''
+      keyPassword ''
+      storeFile file('')
+      storePassword ''
       v2SigningEnabled true   // android 5.0-8.0，必须用V2，否则会有安全问题
       v1SigningEnabled true
     }

@@ -1267,7 +1267,7 @@ class RtcEngine with RtcEngineInterface {
   Future<void> initMMBeautyModule(String mmBeautyAppId) {
     return _invokeMethod('initMMBeautyModule', {'appId': mmBeautyAppId});
   }
-  
+
   @override
   Future<void> addMakeup(String path) {
     return _invokeMethod('addMakeup', {'path': path});
@@ -3462,7 +3462,7 @@ mixin MMBeautyInterface {
   static String MAKEUP_AUTO_TYPE_GODDESS = 'goddess';
   static String MAKEUP_AUTO_TYPE_WHITENING = 'purewhite';
 
-  ///初始化美颜 SDK 
+  ///初始化美颜 SDK
   Future<void> initMMBeautyModule(String mmBeautyAppId);
   ///基础美颜
   Future<void> setBeautyValue(String beautyType, double value);

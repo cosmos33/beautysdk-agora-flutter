@@ -26,6 +26,10 @@ dependencies:
 
   permission_handler: ^6.0.1
 
+  # unzip
+  archive: ^3.1.2
+  path_provider: ^2.0.5
+
 dev_dependencies:
   integration_test:
     sdk: flutter
@@ -51,6 +55,7 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
     - assets/Sound_Horizon.mp3
+    - assets/mmbeautyresource.zip
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

@@ -1,7 +1,6 @@
 package io.agora.rtc.base
 
 import android.content.Context
-import android.graphics.Bitmap
 import com.cosmos.mm.AgoraRawDataBeautyManager
 import io.agora.advancedvideo.rawdata.MediaDataObserverPlugin
 import io.agora.advancedvideo.rawdata.MediaDataVideoObserver
@@ -378,6 +377,7 @@ class IRtcEngine {
   }
 
   interface MMBeautyInterface {
+    fun initMMBeautyModule(data: Map<String, Any?>?, callback: Callback)
     fun setBeautyValue(data: Map<String, Any?>?, callback: Callback)
     fun setAutoBeauty(data: Map<String, Any?>?, callback: Callback)
     fun setLookupEffect(data: Map<String, Any?>?, callback: Callback)
@@ -401,6 +401,10 @@ class RtcEngineManager(
   private var agoraRawDataBeautyManager: AgoraRawDataBeautyManager? = null
   private var frontCamera = true
 
+  @Volatile
+  private var stopPreview = false
+  private var context: Context? = null
+
   fun release() {
     RtcEngine.destroy()
     engine = null
@@ -408,8 +412,9 @@ class RtcEngineManager(
   }
 
   override fun create(params: Map<String, *>, callback: Callback) {
+    context = params["context"] as Context
     engine = RtcEngineEx.create(mapToRtcEngineConfig(params["config"] as Map<*, *>).apply {
-      mContext = params["context"] as Context
+      mContext = context
       mEventHandler = RtcEngineEventHandler { methodName: String, data: Map<String, Any?>? ->
         dipatch(methodName, data)
       }
@@ -419,7 +424,6 @@ class RtcEngineManager(
     MediaPreProcessing.setCallback(mediaDataObserverPlugin)
     MediaPreProcessing.setVideoCaptureByteBuffer(mediaDataObserverPlugin!!.byteBufferCapture)
     mediaDataObserverPlugin?.addVideoObserver(this)
-    agoraRawDataBeautyManager = AgoraRawDataBeautyManager(params["context"] as Context)
   }
 
   fun dipatch(methodName: String, data: Map<String, Any?>?) {
@@ -749,7 +753,8 @@ class RtcEngineManager(
   }
 
   override fun stopPreview(callback: Callback) {
-    callback.code(engine?.stopPreview())
+    stopPreview = true
+    callback.code(1)
   }
 
   override fun enableLocalVideo(params: Map<String, *>, callback: Callback) {
@@ -1363,6 +1368,10 @@ class RtcEngineManager(
     )
   }
 
+  override fun initMMBeautyModule(data: Map<String, Any?>?, callback: Callback) {
+    agoraRawDataBeautyManager = AgoraRawDataBeautyManager(context, data!!["appId"] as String)
+  }
+
   override fun setBeautyValue(data: Map<String, Any?>?, callback: Callback) {
     agoraRawDataBeautyManager?.setBeautyValue(data!!["beautyType"] as String, (data["value"] as Double).toFloat())
   }
@@ -1403,12 +1412,23 @@ class RtcEngineManager(
     agoraRawDataBeautyManager?.clearMakeup()
   }
 
+  var temp: ByteArray? = null
   override fun onCaptureVideoFrame(data: ByteArray?, frameType: Int, width: Int, height: Int, bufferLength: Int, yStride: Int, uStride: Int, vStride: Int, rotation: Int, renderTimeMs: Long) {
+    if (stopPreview) {
+      agoraRawDataBeautyManager?.textureDestoryed()
+      engine?.stopPreview()
+      return
+    }
     val NV21 = ByteArray(bufferLength)
     YUVUtils.swapYU12toYUV420SP(data, NV21, width, height, yStride, uStride, vStride)
-    val bitmap: Bitmap? = agoraRawDataBeautyManager!!.renderWithRawData(NV21, width, height, rotation, frontCamera)
-    if (bitmap != null) {
-      System.arraycopy(YUVUtils.bitmapToI420(width, height, bitmap), 0, data, 0, bufferLength)
+    val bytes = agoraRawDataBeautyManager!!.renderWithRawData(NV21, width, height, rotation, true)
+    if (bytes != null) {
+      bytes.position(0)
+      if (temp == null || temp!!.size !== bytes.remaining()) {
+        temp = ByteArray(bytes.remaining())
+      }
+      bytes.get(temp)
+      YUVUtils.encodeI420(data, temp!!, width, height)
     }
   }
 

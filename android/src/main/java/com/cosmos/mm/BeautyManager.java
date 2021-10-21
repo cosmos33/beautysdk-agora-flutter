@@ -9,14 +9,13 @@ import com.cosmos.beauty.inter.OnBeautyResourcePreparedListener;
 import com.cosmos.beauty.model.AuthResult;
 import com.cosmos.beauty.model.BeautySDKInitConfig;
 import com.cosmos.beauty.module.IMMRenderModuleManager;
-import com.cosmos.beauty.module.beauty.IBeautyModule;
+import com.cosmos.beauty.module.beauty.AutoBeautyType;
 import com.cosmos.beauty.module.beauty.SimpleBeautyType;
 import com.cosmos.beauty.module.lookup.ILookupModule;
 import com.cosmos.beauty.module.makeup.IMakeupBeautyModule;
 import com.cosmos.beauty.module.sticker.DetectRect;
 import com.cosmos.beauty.module.sticker.IStickerModule;
 import com.cosmos.beauty.module.sticker.MaskLoadCallback;
-import com.cosmos.beautyutils.BuildConfig;
 import com.cosmos.beautyutils.Empty2Filter;
 import com.cosmos.beautyutils.FaceInfoCreatorPBOFilter;
 import com.immomo.resdownloader.utils.MainThreadExecutor;
@@ -27,9 +26,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.util.Locale;
 
 abstract public class BeautyManager implements IMMRenderModuleManager.CVModelStatusListener, IMMRenderModuleManager.IDetectFaceCallback, IMMRenderModuleManager.IDetectGestureCallback {
-  protected static String cosmosAppid = "";// TODO mmbeauty 这里需要修改为cosmos后台注册的appid
   protected IMMRenderModuleManager renderModuleManager;
   protected boolean authSuccess = false;
   protected boolean filterResouceSuccess = false;
@@ -185,5 +184,92 @@ abstract public class BeautyManager implements IMMRenderModuleManager.CVModelSta
   @Override
   public void onGestureMiss() {
 
+  }
+
+
+  public void clearMakeup() {
+    iBeautyModule.clear();
+  }
+
+  @Nullable
+  public void setBeautyValue(@NotNull String beautyBype, float value) {
+    if (iBeautyModule == null) {
+      return;
+    }
+    iBeautyModule.setValue(SimpleBeautyType.valueOf(beautyBype.toUpperCase(Locale.ROOT)), value);
+  }
+
+  @Nullable
+  public void setAutoBeauty(@NotNull String autoType) {
+    if (iBeautyModule == null) {
+      return ;
+    }
+    iBeautyModule.setAutoBeauty(AutoBeautyType.valueOf(String.format("AUTOBEAUTY_%s",autoType.toUpperCase(Locale.ROOT))));
+  }
+
+  @Nullable
+  public void setLookupEffect(@NotNull String path) {
+    if (iLookupModule == null) {
+      return ;
+    }
+    iLookupModule.setEffect(path);
+  }
+
+  @Nullable
+  public void setLookupIntensity(float value) {
+    if (iLookupModule == null) {
+      return;
+    }
+    iLookupModule.setIntensity(value);
+  }
+
+  @Nullable
+  public void addMaskModel(@NotNull final String maskPath) {
+    if (iStickerModule == null) {
+      return ;
+    }
+    iStickerModule.addMaskModel(
+      new File(maskPath),
+      new MaskLoadCallback() {
+
+        @Override
+        public void onMaskLoadSuccess(MaskModel maskModel) {
+          if (maskModel == null) {
+            Toaster.show(String.format("贴纸加载失败：%s",maskPath));
+          }
+        }
+      });
+  }
+
+  @Nullable
+  public void clearMask() {
+    if (iStickerModule == null) {
+      return ;
+    }
+    iStickerModule.clear();
+  }
+
+  @Nullable
+  public void addMakeup(@NotNull String path) {
+    if (iBeautyModule == null) {
+      return ;
+    }
+    iBeautyModule.addMakeup(path);
+  }
+
+  @Nullable
+  public void removeMakeup(@NotNull String type) {
+    if (iBeautyModule == null) {
+      return ;
+    }
+    iBeautyModule.removeMakeup(SimpleBeautyType.valueOf(type));
+  }
+
+  @Nullable
+  public void changeLipTextureType(int type) {
+    if (iBeautyModule == null) {
+      return ;
+    }
+    iBeautyModule.changeLipTextureType(type);
   }
 }
